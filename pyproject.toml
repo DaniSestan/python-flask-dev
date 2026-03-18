@@ -5,6 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "Flask_Rest_API_Tutorial"
 version = "1.0.0"
+dependencies = [
+    'Flask==3.1.2',
+    'numpy==2.4.2',
+    'pandas==3.0.1'
+    ]
 
 [tool.setuptools.packages.find]
 where = ["."]

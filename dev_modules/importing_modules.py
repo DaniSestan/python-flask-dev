@@ -4,14 +4,6 @@ import sys
 import importlib.util
 from pathlib import Path
 
-# TODO: write down the process steps of how to configure the project - NOTE: NO modifying the project path
-
-# - create a venv: python -m venv venv
-# activate the venv: source venv/bin/activate
-# create a pyproject.toml file; add the file to the technical documentation folder, you can use this as a template
-# create a setup.py file with a list of the required pkgs
-# TODO: there is some issue with the setuptools pkg; this is specified in the project build config in the pyproject.toml file - however it's possible that it needs to be installed prior to installing the pkgs listed in the setup file - that kind of seems like a circular issue
-# install the pkgs, setting the 'editable' flag in the pip command: pip install -e .
 
 project_root = Path(os.getenv('VIRTUAL_ENV')).parent.absolute()
 virtual_env = Path(os.getenv('VIRTUAL_ENV'))
