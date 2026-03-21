@@ -10,10 +10,9 @@ virtual_env = Path(os.getenv('VIRTUAL_ENV'))
 python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
 
 # Import modules from a specified path
-def get_imported_project_module(module_name, add_to_import_system = False):
-    custom_modules_data = {"mod": "./dev_modules/mod.py", "custom_error": "./dev_modules/custom_exceptions.py"}
-    abs_mod_path = Path(f"./{custom_modules_data.get(module_name)}")
-    module_spec = importlib.util.spec_from_file_location(module_name, abs_mod_path)
+def get_imported_project_module(module_name, absolute_module_path, add_to_import_system = False):
+    abs_mod_path = Path(absolute_module_path)
+    module_spec = importlib.util.spec_from_file_location(module_name, Path(absolute_module_path))
     if module_spec is not None:
         # Create the module object from the spec
         custom_module = importlib.util.module_from_spec(module_spec)
