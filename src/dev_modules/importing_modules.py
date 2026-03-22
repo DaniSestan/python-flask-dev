@@ -4,7 +4,6 @@ import sys
 import importlib.util
 from pathlib import Path
 
-
 project_root = Path(os.getenv('VIRTUAL_ENV')).parent.absolute()
 virtual_env = Path(os.getenv('VIRTUAL_ENV'))
 python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"

@@ -1,10 +1,13 @@
 from flask import Flask
-from dev_modules.formatting_data import get_filtered_key_vals
-# from data.users import get_users
-app = Flask(__name__)
+import pandas as pd
+import logging
+import builtins
+import pathlib
+# from custom_exceptions import CustomError
+from data_source import DataSource
+from custom_exceptions import CustomError
 
-# sample_data = get_users()
-sample_data = [
+test_data = [
     {
         "id": 1,
         "name": "Leanne Graham",
@@ -237,11 +240,22 @@ sample_data = [
     }
 ]
 
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
+app = Flask(__name__)
+logger = logging.getLogger(__name__)
 
+def get_filtered_key_vals(key, dictionary = None, filepath = None):
+    if dictionary:
+        dataframe = pd.DataFrame(dictionary)
+    elif filepath:
+        data = DataSource.convert_to_dict(filepath)
+        dataframe = pd.DataFrame(data)
+    else:
+        err_msg = "No data source provided. Please provide either a dictionary or a filepath to a JSON file."
+        raise CustomError(err_msg, 400)
 
-if __name__ == '__main__':
-    # app.run()
-    print(get_filtered_key_vals("id", list, sample_data))
+    return list(dataframe.to_dict().get(key).values())
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    filtered_data = get_filtered_key_vals('id', dictionary=test_data)
+    logger.info(f"filtered_data: {filtered_data}")
