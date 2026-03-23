@@ -1,5 +1,5 @@
 # Credentials files
-*changelog_generator.toml
+.changelog_generator.toml
 
 # Excluded folders and files
 tmp/
