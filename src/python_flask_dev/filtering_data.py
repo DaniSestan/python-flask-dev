@@ -1,11 +1,12 @@
 from flask import Flask
 import pandas as pd
 import logging
-import builtins
-import pathlib
 # from custom_exceptions import CustomError
-from data_source import DataSource
-from custom_exceptions import CustomError
+from pathlib import Path
+import importlib.util
+import sys
+import os
+
 
 test_data = [
     {
@@ -243,19 +244,34 @@ test_data = [
 app = Flask(__name__)
 logger = logging.getLogger(__name__)
 
+def get_imported_project_module(module_name, module_path):
+    project_root = Path(os.getenv('VIRTUAL_ENV')).parent.absolute()
+
+    # Create the module object from the spec
+    module_spec = importlib.util.spec_from_file_location(module_name, Path(f"{project_root}/{module_path}"))
+
+    # Load the module
+    custom_module = importlib.util.module_from_spec(module_spec)
+    sys.modules[module_name] = custom_module
+    module_spec.loader.exec_module(custom_module)
+    return custom_module
+
 def get_filtered_key_vals(key, dictionary = None, filepath = None):
+    # /home/dani/Work/Work-Projects/sample-projects/python-flask-dev/data_source.py
+    data_source = get_imported_project_module("data_source", "./src/python_flask_dev/data_source.py")
     if dictionary:
         dataframe = pd.DataFrame(dictionary)
     elif filepath:
-        data = DataSource.convert_to_dict(filepath)
+        data = data_source.DataSource.convert_to_dict(filepath)
         dataframe = pd.DataFrame(data)
-    else:
-        err_msg = "No data source provided. Please provide either a dictionary or a filepath to a JSON file."
-        raise CustomError(err_msg, 400)
+    # else:
+    #     err_msg = "No data source provided. Please provide either a dictionary or a filepath to a JSON file."
+    #     raise CustomError(err_msg, 400)
 
     return list(dataframe.to_dict().get(key).values())
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     filtered_data = get_filtered_key_vals('id', dictionary=test_data)
+    # filtered_data = get_filtered_key_vals('id')
     logger.info(f"filtered_data: {filtered_data}")

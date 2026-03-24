@@ -1,5 +1,5 @@
 from flask import Flask
-from dev_modules.formatting_data import get_filtered_key_vals
+from python_flask_dev.formatting_data import get_filtered_key_vals
 # from data.users import get_users
 app = Flask(__name__)
 
@@ -243,5 +243,4 @@ def hello_world():  # put application's code here
 
 
 if __name__ == '__main__':
-    # app.run()
-    print(get_filtered_key_vals("id", list, sample_data))
+    app.run()

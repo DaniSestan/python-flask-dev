@@ -1,8 +1,9 @@
+# TODO: coffee finish this create data_source pkg to avoid import error
 import argparse
 import pandas as pd
 import os
 from pathlib import Path
-from custom_exceptions import CustomError
+# from ..custom_exceptions import CustomError
 
 # ENV VARS
 PROJECT_ROOT = Path(os.getenv('VIRTUAL_ENV')).parent.absolute()
@@ -28,6 +29,6 @@ class DataSource:
             return pd.read_json(self.filename).to_dict()
         elif filetype == "csv":
             return pd.read_csv(self.filename).to_dict()
-        else:
-            err_msg = f"Accepted filetypes: {str(accepted_filetypes)}"
-            raise CustomError(err_msg, 401)
+        # else:
+        #     err_msg = f"Accepted filetypes: {str(accepted_filetypes)}"
+        #     raise CustomError(err_msg, 401)
