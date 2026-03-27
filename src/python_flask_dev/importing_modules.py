@@ -1,44 +1,77 @@
-# imports modules within the project
 import os
 import sys
 import importlib.util
 from pathlib import Path
-from custom_exceptions import CustomError
+import site
 
-project_root = Path(os.getenv('VIRTUAL_ENV')).parent.absolute()
-virtual_env = Path(os.getenv('VIRTUAL_ENV'))
-python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
 
-# Import modules from a specified path
-def get_imported_project_module(module_name, absolute_module_path, add_to_import_system = False):
-    abs_mod_path = Path(absolute_module_path)
-    # Create the module object from the spec
-    module_spec = importlib.util.spec_from_file_location(module_name, Path(absolute_module_path))
-    # Load the module
-    if module_spec is not None:
-        custom_module = importlib.util.module_from_spec(module_spec)
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+VIRTUAL_ENV = Path(os.getenv('VIRTUAL_ENV'))
 
-        # Optionally add the module to sys.modules so it's treated as a normal import
-        if add_to_import_system:
-            sys.modules[module_name] = custom_module
+# opt for module in the local project directory, or module installed in the venv
 
-        module_spec.loader.exec_module(custom_module)
+def get_imported_project_module(module_name, module_path = None,  is_pkg_installation_required = False, add_to_import_system = False):
 
-        # # Now you can use it like a regular module
-        # custom_module.some_function()
-        # return custom_module
+    if is_pkg_installation_required:
+        module_path = f"{site.getsitepackages()[0]}/{module_name}"
     else:
-        # print(f" Could not find or create a spec for {abs_mod_path}")
-        err_msg = f"Could not find or create a spec for {abs_mod_path}"
-        raise CustomError(err_msg, 400)
+        if module_path == None:
+            raise Exception("ERROR: Module path is required for an installed package")
 
+    # Create the module object from the spec
+    module_spec = importlib.util.spec_from_file_location(module_name, Path(module_path))
+    # Load the module
+    custom_module = importlib.util.module_from_spec(module_spec)
+
+    # Optionally add the module to sys.modules so it's treated as a normal import
+    if add_to_import_system:
+        sys.modules[module_name] = custom_module
+
+    module_spec.loader.exec_module(custom_module)
+
+    # The module  is callable: `custom_module.some_function()`
     return custom_module
 
 # Note that, typically, this is not recommended for python projects
-def modify_venv_pythonpath(pkg_path, absolute_path=False):
-    site_pkgs_pth_file = f"{virtual_env}/lib/{python_version}/site-packages/{Path(project_root).name}.pth"
-    print("site_pkgs_pth_file: ", site_pkgs_pth_file)
-    with open(site_pkgs_pth_file, "w") as f:
-        path = pkg_path if absolute_path else f"{project_root}/{pkg_path}"
-        f.write(path)
+# absolute_path; is_package_installed; module_name;
+def modify_venv_pythonpath(*, absolute_pkg_path = None, installed_pkg_name = None):
+    if absolute_pkg_path:
+        pkg_path = absolute_pkg_path
+    elif installed_pkg_name:
+        pkg_path = f"{site.getsitepackages()[0]}/{installed_pkg_name}"
+    else:
+        raise Exception("ERROR: absolute_pkg_path or installed_pkg_name is required")
 
+    # Create/write to a .pth file, listing the path of the package to import:
+    site_dir = site.getsitepackages()[0]
+    logger.info(f"site_dir: {site_dir}")
+    site_pkgs_pth_file = f"{site_dir}/{module_name}.pth"
+    pkg_path = f"{site_dir}/{module_name}"
+    try:
+        with open(site_pkgs_pth_file, 'r') as file:
+            lines = [line.strip() for line in file]
+    except Exception as e:
+        logger.error(e)
+        lines = []
+
+    # TODO: [START] - testing comment
+    logger.info(f"lines: {lines}")
+    # TODO: [END] - testing comment
+
+    if pkg_path not in lines:
+        with open(site_pkgs_pth_file, 'a') as file:
+            if pkg_path not in lines:
+                file.write(pkg_path + '\n')
+
+    # Add the package:
+    known_paths = set(sys.path)
+    logger.info(f"known_paths: {known_paths}")
+    site.addpackage(site_dir, "example_package_SHELLCO_ADMIN.pth", known_paths)
+    logger.info(os.listdir(site_dir))
+
+logger.info(f"##### sys.path: {sys.path}")
+module_name = "example_package_SHELLCO_ADMIN"
+# modify_venv_pythonpath(module_name)
+# modify_venv_pythonpath(installed_pkg_name=module_name)
+modify_venv_pythonpath(absolute_pkg_path="/home/dani/Work/Work-Projects/sample-projects/my_simple_test/src/example_package_SHELLCO_ADMIN")
+logger.info(f"##### sys.path: {sys.path}")
