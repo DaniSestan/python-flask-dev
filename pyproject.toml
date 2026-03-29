@@ -1,15 +1,16 @@
 [project]
 name = "python-flask-dev"
-version = "0.0.8"
+version = "0.0.9"
 authors = [
-    { name="Example Author", email="author@example.com" },
+    { name="Dani", email="daniasestan@gmail.com" },
 ]
-description = "A small example package"
+description = "Package containing modules with 'helper' functions to support the development of Python Flask applications."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.12.3"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
+    "Operating System :: Linux",
+    "Web Framework :: Flask"
 ]
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
