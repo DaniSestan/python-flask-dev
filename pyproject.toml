@@ -1,6 +1,6 @@
 [project]
 name = "python-flask-dev"
-version = "0.0.9"
+version = "0.0.10"
 authors = [
     { name="Dani", email="daniasestan@gmail.com" },
 ]
@@ -28,7 +28,3 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-
-[project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
-Issues = "https://github.com/pypa/sampleproject/issues"
