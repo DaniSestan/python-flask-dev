@@ -1,30 +1,35 @@
 [project]
 name = "python-flask-dev"
-version = "0.0.10"
 authors = [
-    { name="Dani", email="daniasestan@gmail.com" },
+    { name = "Dani", email = "daniasestan@gmail.com" },
 ]
 description = "Package containing modules with 'helper' functions to support the development of Python Flask applications."
 readme = "README.md"
 requires-python = ">=3.12.3"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Operating System :: Linux",
-    "Web Framework :: Flask"
+    "Operating System :: POSIX :: Linux",
+    "Framework :: Flask",
 ]
 license = "MIT"
-license-files = ["LICEN[CS]E*"]
-dependencies = [
-    'Flask==3.1.2',
-    'numpy==2.4.2',
-    'pandas==3.0.1',
-    "build==1.4.0",
-    "twine==6.2.0"
+license-files = [
+    "LICEN[CS]E*",
 ]
+dependencies = [
+    "Flask==3.1.2",
+    "numpy==2.4.2",
+    "pandas==3.0.1",
+    "build==1.4.0",
+    "twine==6.2.0",
+]
+version = "0.0.11"
+dynamic = []
 
 [build-system]
-requires = ["setuptools >= 77.0.3"]
+requires = [
+    "setuptools >= 77.0.3",
+]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+[tool.setuptools.package-dir]
+"" = "src"

@@ -51,73 +51,29 @@ If the Markdown Changelog Generator is used, it needs to include  'changelog_gen
 
 #### Install Python Flask Dev
 
-1. {Write the step here.}
-
-   {Explanatory text here}
-
-   {Optional: Include a code sample or screenshot that helps your users complete this step}
-
-2. {Write the step here.}
-
-   a. {Substep 1}
-
-   b. {Substep 2}
+1. Install the [PyPi package](https://pypi.org/project/python-flask-dev)
+`pip install python-flask-dev`
 
 #### Configure Python Flask Dev
 
-1. {Write the step here.}
-2. {Write the step here.}
+1. Configure any changes as needed, if cloning the project source code.
 
 #### Run Python Flask Dev
 
-1. {Write the step here.}
-2. {Write the step here.}
+1. Import any 'helper' functions throughout your project code; refer to the description on each module for more information.
 
 #### Troubleshoot Python Flask Dev
 
-1. {Write the step here.}
-2. {Write the step here.}
+1. No known issues at this time: P/T, leave a PR with comments or fork off to resolve them in a separate repository. (:
 
-<table>
-  <tr>
-   <td>
-    Issue
-   </td>
-   <td>
-    Solution
-   </td>
-  </tr>
-  <tr>
-   <td>
-    {Describe the issue here}
-   </td>
-   <td>
-    {Write solution here}
-   </td>
-  </tr>
-  <tr>
-   <td>
-    {Describe the issue here}
-   </td>
-   <td>
-    {Write solution here}
-   </td>
-  </tr>
-  <tr>
-   <td>
-    {Describe the issue here}
-   </td>
-   <td>
-    {Write solution here}
-   </td>
-  </tr>
-</table>
+_____________________
 
-Other troubleshooting support:
+#### Using this project
 
-* {Link to FAQs}
-* {Link to runbooks}
-* {Link to other relevant support information}
+###### Incremental versioning
+
+
+_____________________
 
 ### Recommendations
 
