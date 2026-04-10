@@ -3,12 +3,12 @@ import unittest
 import sys
 
 
-# class TestStringMethods(unittest.TestCase):
+class TestStringMethods(unittest.TestCase):
 
     # # Example test cases:
-    # def test_upper(self):
-    #     self.assertEqual('foo'.upper(), 'FOO')
-    #
+    def test_upper(self):
+        self.assertEqual('foo'.upper(), 'FOO')
+
     # def test_isupper(self):
     #     self.assertTrue('FOO'.isupper())
     #     self.assertFalse('Foo'.isupper())
@@ -27,8 +27,8 @@ import sys
     #     self.assertEqual(filtered_data, result)
 
 if __name__ == '__main__':
-    # unittest.main()
-    print(sys.modules)
-    for i in sys.modules.keys():
-        if i == "python-flask-dev":
-            print("module: ", sys.modules[i])
+    unittest.main()
+    # print(sys.modules)
+    # for i in sys.modules.keys():
+    #     if i == "python-flask-dev":
+    #         print("module: ", sys.modules[i])
