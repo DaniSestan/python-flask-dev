@@ -119,12 +119,12 @@ class IncrementalVersioning:
             self.set_version_manually()
 
 if __name__ == "__main__":
-    # TODO: [START] comment as needed if testing this
     pass
+    # TODO: [START] comment as needed if testing this
     # v = "foo_bar_baz"
-    v = "manual"
+    # v = "manual"
     # v = "dynamic"
     # v = "automatic"
+    # iv = IncrementalVersioning(v)
+    # iv.incremental_versioning()
     # TODO: [END] comment as needed if testing this
-    iv = IncrementalVersioning(v)
-    iv.incremental_versioning()

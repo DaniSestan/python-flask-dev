@@ -25,7 +25,7 @@ dependencies = [
     "tomli_w==1.2.0",
 ]
 dynamic = []
-version = ""
+version = "0.0.12"
 
 [build-system]
 requires = [
