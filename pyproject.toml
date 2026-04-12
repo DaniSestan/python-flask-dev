@@ -24,8 +24,6 @@ dependencies = [
     "requests",
     "tomli_w",
 ]
-dynamic = []
-version = "0.0.13"
 
 [build-system]
 requires = [
