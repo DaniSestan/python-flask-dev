@@ -1,57 +1,45 @@
-# TODO: resolve some issue with version key in the project table
+# TODO: configure python interpreter in the test module; some issue as this is a separate module from the source code
 import unittest
 import logging
-import requests
-import tomllib
-import tomli_w
-import argparse
-from python_flask_dev.packaging import incremental_versioning as iv
-import os
-from pathlib import Path
+from python_flask_dev.packaging.incremental_versioning import IncrementalVersioning
 
 
 # LOGGING
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-version = "0.0.0"
 
-def get_toml_data():
-    with open(f"pyproject.toml", "rb") as f:
-        toml_data = tomllib.load(f)
-
-    return toml_data
 
 class TestStringMethods(unittest.TestCase):
     def test_manual(self):
-        global version
-        versioning = "manual"
-        iv.incremental_versioning(versioning)
-        toml_data = get_toml_data()
+        version = ""
+        iv_manual = IncrementalVersioning("manual")
+        iv_manual.incremental_versioning()
+        toml_data = iv_manual.get_toml_data()
         logger.info(f"########### toml_data: {toml_data}")
-        pyproject_version = toml_data["project"]["version"]
+        pyproject_version = toml_data["project"].get("version")
         self.assertEqual(pyproject_version, version)
 
     def test_dynamic(self):
-        global version
-        versioning = "dynamic"
-        iv.incremental_versioning(versioning)
-        toml_data = get_toml_data()
+        version = "0.0.12"
+        iv_dynamic = IncrementalVersioning("dynamic")
+        iv_dynamic.incremental_versioning()
+        toml_data = iv_dynamic.get_toml_data()
         logger.info(f"########### toml_data: {toml_data}")
-        pyproject_version = toml_data["project"]["version"]
+
+        # read from version.txt file
+        with open("version.txt", "r") as f:
+            pyproject_version = f.read().strip()
+
         self.assertEqual(pyproject_version, version)
 
     def test_automatic(self):
-        global version
-        versioning = "automatic"
-        iv.incremental_versioning(versioning)
-        toml_data = get_toml_data()
+        version = "0.0.12"
+        iv_automatic = IncrementalVersioning("automatic")
+        iv_automatic.incremental_versioning()
+        toml_data = iv_automatic.get_toml_data()
         logger.info(f"########### toml_data: {toml_data}")
-        pyproject_version = toml_data["project"]["version"]
+        pyproject_version = toml_data["project"].get("version")
         self.assertEqual(pyproject_version, version)
 
 if __name__ == "__main__":
-    data = get_toml_data()
-    # logger.info(f"############: {data}")
-
-    version = "0.0.5"
     unittest.main()

@@ -1,3 +1,4 @@
+# TODO: this is useful, put it on the back burner for now; it's probable there's an error at this point when importing this from a PyPi pkg; requires some modifications; what else
 import os
 import sys
 import importlib.util
