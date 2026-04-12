@@ -3,10 +3,13 @@ import requests
 import tomllib
 import tomli_w
 import argparse
+from pathlib import Path
+import os
 
 
 # ENV VARS
 PYPI_BASE_URL = "https://pypi.org/simple/"
+PROJECT_ROOT = Path(os.getenv('VIRTUAL_ENV')).parent.absolute()
 
 # LOGGING
 logger = logging.getLogger(__name__)
@@ -16,6 +19,7 @@ class IncrementalVersioning:
     def __init__(self, versioning):
         self.versioning = versioning
         self.toml_data = self.get_toml_data()
+        self.incremental_versioning()
 
     def get_toml_data(self):
         # Read project data from pyproject.toml
@@ -37,6 +41,18 @@ class IncrementalVersioning:
 
         return {"project_name": project_name, "pypi_project_url": pypi_project_url, "project_versions": project_versions, "project_latest_version": project_latest_version}
 
+    def get_new_project_version(self):
+        pypi_repository_data = self.get_pypi_repository_data()
+        project_latest_version = pypi_repository_data["project_latest_version"]
+
+        # Change the version number
+        project_versioning_list = project_latest_version.split(".")
+        project_versioning_list[2] = f"{int(project_versioning_list[2]) + 1}"
+        logger.info(f"######## project_versioning_list: {project_versioning_list}")
+        new_project_version = '.'.join(project_versioning_list)
+        logger.info(f"######## new_project_version: {new_project_version}")
+        return new_project_version
+
     def update_pyproject_config(self, toml_data):
         with open("pyproject.toml", "wb") as f:
             tomli_w.dump(toml_data, f)
@@ -53,9 +69,8 @@ class IncrementalVersioning:
                 toml_data["project"]["dynamic"].remove("version")
                 self.update_pyproject_config(toml_data)
         except Exception as e:
-            logging.info(f"######## ERROR: {e}; 'dynamic' is not a project table key in pyproject.toml; however, it is not required to set the version number manually.")
+            logging.error(f"######## ERROR: {e}; 'dynamic' is not a project table key in pyproject.toml; however, it is not required to set the version number manually.")
 
-        logging.info(f"################ toml_data: {toml_data['project']}")
         logging.info("Manual versioning selected. Please update the version number in pyproject.toml manually.")
 
     def set_version_dynamically(self):
@@ -65,39 +80,40 @@ class IncrementalVersioning:
             del toml_data["project"]["version"]
             self.update_pyproject_config(toml_data)
 
-        if "version" not in toml_data["project"]["dynamic"]:
+        if "dynamic" not in toml_data["project"]:
+            toml_data["project"]["dynamic"] = []
+            self.update_pyproject_config(toml_data)
+        elif "version" not in toml_data["project"]["dynamic"]:
             toml_data["project"]["dynamic"].append("version")
             self.update_pyproject_config(toml_data)
 
-        logging.info("Dynamic versioning selected. Please set the version number in the 'version.txt' file.")
+        with open(f"{PROJECT_ROOT}/version.txt", 'w') as file:
+            project_latest_version = self.get_new_project_version()
+            file.write(project_latest_version)
+
+        logging.info(f"Dynamic versioning selected; New version number '{project_latest_version}' set in the 'version.txt' file.")
 
     def set_version_automatically(self):
         toml_data = self.get_toml_data()
 
         project_name, pypi_project_url, project_versions, project_latest_version = self.get_pypi_repository_data().values()
 
-        # Change the version number
-        project_versioning_list = project_latest_version.split(".")
-        # TODO: int to string
-        project_versioning_list[2] = f"{int(project_versioning_list[2]) + 1}"
-        logger.info(f"######## project_versioning_list: {project_versioning_list}")
-        new_project_version = '.'.join(project_versioning_list)
-        logger.info(f"######## new_project_version: {new_project_version}")
+        new_project_version = self.get_new_project_version()
 
         # Write the new version number
         toml_data["project"]["version"] = new_project_version
-        if "version" in toml_data["project"]["dynamic"]:
-            toml_data["project"]["dynamic"].remove("version")
+        try:
+            if "version" in toml_data["project"]["dynamic"]:
+                toml_data["project"]["dynamic"].remove("version")
+        except Exception as e:
+            logging.info(f"######## ERROR: {e}; 'dynamic' is not a project table key in pyproject.toml; however, it is not required to set the version number automatically.")
         self.update_pyproject_config(toml_data)
+
         logging.info(f"Automatic versioning selected. Version number updated to {new_project_version} in pyproject.toml.")
 
     def incremental_versioning(self):
         versioning = self.versioning
         toml_data = self.get_toml_data()
-
-        # if "version" not in toml_data["project"]:
-        #     toml_data["project"]["version"] = ""
-        #     update_pyproject_config(toml_data)
 
         if "dynamic" not in toml_data["project"]:
             toml_data["project"]["dynamic"] = []
