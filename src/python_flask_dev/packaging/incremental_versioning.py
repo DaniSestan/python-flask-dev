@@ -95,12 +95,13 @@ class IncrementalVersioning:
 
     def set_version_automatically(self):
         toml_data = self.get_toml_data()
-
+        if "version" not in toml_data["project"]:
+            toml_data["project"]["version"] = ""
+            self.update_pyproject_config(toml_data)
         project_name, pypi_project_url, project_versions, project_latest_version = self.get_pypi_repository_data().values()
 
-        new_project_version = self.get_new_project_version()
-
         # Write the new version number
+        new_project_version = self.get_new_project_version()
         toml_data["project"]["version"] = new_project_version
         try:
             if "version" in toml_data["project"]["dynamic"]:
@@ -114,10 +115,6 @@ class IncrementalVersioning:
     def incremental_versioning(self):
         versioning = self.versioning
         toml_data = self.get_toml_data()
-
-        if "dynamic" not in toml_data["project"]:
-            toml_data["project"]["dynamic"] = []
-            self.update_pyproject_config(toml_data)
 
         logging.info(f"######## pypi_project_url: {f"{PYPI_BASE_URL}{toml_data["project"]["name"]}"}")
         logging.info(f"######## Project: {self.get_pypi_repository_data()['project_name']}")
