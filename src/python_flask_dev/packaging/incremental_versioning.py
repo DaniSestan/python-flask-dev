@@ -111,7 +111,7 @@ class IncrementalVersioning:
             logging.info(f"######## ERROR: {e}; 'dynamic' is not a project table key in pyproject.toml; however, it is not required to set the version number automatically.")
         self.update_pyproject_config(toml_data)
 
-        logging.info(f"Automatic versioning selected. Version number updated to {new_project_version} in pyproject.toml.")
+        logging.info(f"######## Automatic versioning selected. Version number updated to {new_project_version} in pyproject.toml.")
 
     def incremental_versioning(self):
         versioning = self.versioning
