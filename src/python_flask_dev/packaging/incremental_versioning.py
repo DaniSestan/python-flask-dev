@@ -83,9 +83,10 @@ class IncrementalVersioning:
         if "dynamic" not in toml_data["project"]:
             toml_data["project"]["dynamic"] = []
             self.update_pyproject_config(toml_data)
-        elif "version" not in toml_data["project"]["dynamic"]:
-            toml_data["project"]["dynamic"].append("version")
-            self.update_pyproject_config(toml_data)
+        else:
+            if "version" not in toml_data["project"]["dynamic"]:
+                toml_data["project"]["dynamic"].append("version")
+                self.update_pyproject_config(toml_data)
 
         with open(f"{PROJECT_ROOT}/version.txt", 'w') as file:
             project_latest_version = self.get_new_project_version()
